@@ -9,6 +9,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import io.github.pixee.security.BoundedLineReader;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -73,7 +74,7 @@ public class FreeMarkerSiteGenerator implements CompatibilitySiteGenerator {
 
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            while ((line = bufferedReader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(bufferedReader, 1000000)) != null) {
                 obj = (JSONObject) new JSONParser().parse(line);
                 category.addCategory(String.valueOf(obj.get("type")), (JSONObject) obj.get("artifact"));
             }
